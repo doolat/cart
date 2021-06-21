@@ -15,7 +15,7 @@
                     <b>{{$product->cost}} </b>
                     <b>{{$product->name}} </b>
                     <b style="margin-right: 80px;">{{$product->description}}</b>
-                    <input type="number" step="1" data-id="{{$product->id}}" value="{{$product->quantity}}" style="width: 50px" min="1">
+                    <input type="number" step="1" data-id="{{$product->id}}" value="{{ $product->quantity>1 ? $product->quantity : 1 }}" style="width: 50px" min="1">
                     <button data-id="{{$product->id}}" id="{{$product->id}}" class="btn-danger btn remove-from-cart" style=" border-radius: 2px; float: right">Remove</button>
                 </div>
 
@@ -41,7 +41,7 @@
                     },
                     success: function (data) {
                         console.log(data);
-                        alert(data);
+                        // alert(data);
                     },
                 })
             })
