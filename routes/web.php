@@ -18,4 +18,5 @@ use App\Http\Controllers\ProductController;
     Route::get('/product/{id}', 'ProductController@show')->name('product');
     Route::get('/cart', 'ProductController@getCart')->name('getCart');
     Route::post('/cart', 'ProductController@addToCart')->name('postCart');
+    Route::delete('/cart', 'ProductController@removeFromCart')->name('deleteCart');
     Route::delete('remove-from-cart', 'ProductController@removeFromCart')->name('remove-from-cart');

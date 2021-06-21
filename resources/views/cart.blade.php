@@ -11,12 +11,14 @@
         <div class="container p-1 m-1" style="margin-top: 5px">
             @foreach($products as $product)
                 @csrf
-                <div style="border-radius:3px ; background-color: #7a9fbd; height: 60px;" class="container product-div">
+                <div style="border-radius:3px ; background-color: #7a9fbd; height: 60px; float: left; display: inline" class="container product-div">
                     <b>{{$product->cost}} </b>
                     <b>{{$product->name}} </b>
-                    <b>{{$product->description}}</b>
-                    <input type="number" step="1" data-id="{{$product->id}}" value="{{$product->quantity}}" style="float: right; width: 50px">
+                    <b style="margin-right: 80px;">{{$product->description}}</b>
+                    <input type="number" step="1" data-id="{{$product->id}}" value="{{$product->quantity}}" style="width: 50px" min="1">
+                    <button data-id="{{$product->id}}" id="{{$product->id}}" class="btn-danger btn remove-from-cart" style=" border-radius: 2px; float: right">Remove</button>
                 </div>
+
                 <br>
             @endforeach
         </div>
@@ -43,6 +45,29 @@
                     },
                 })
             })
+            let a=1;
+            $(".remove-from-cart").click(function (e) {
+                e.preventDefault();
+                ++a;
+                // console.log('Click'+a);
+                $(this).parent().remove();
+                // alert($(this).parent().text());
+                let id = $(this).data('id');
+                $.ajax({
+                    type: "DELETE",
+                    url: "{{route('deleteCart')}}",
+                    data: {
+                        id : id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        alert(data);
+                    },
+                });
+
+            });
         });
 
     </script>
