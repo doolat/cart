@@ -22,8 +22,9 @@ class ProductController extends Controller
     }
 
     public function getCart(Request $request){
-        return view('cart');
-//        return view('cart');
+        if ($request->ajax()) {
+            return $request->id;
+        }
         $productsInCart = session()->get('products',[]);
         $products = [];
             $productsI = Product::find(array_keys($productsInCart));
@@ -31,23 +32,28 @@ class ProductController extends Controller
                 $product->quantity = $productsInCart[$product->id];
             }
             $products = $productsI;
-        return ['products' => $products];
+        return view('cart', [
+            'products' => $products
+        ]);
     }
 
     public function addToCart(Request $request){
-//        try {
-//            $request->validate([
-//                'id' => 'required|integer|min:1',
-////                'quantity' => 'required|integer|min:1',
-//            ]);
-//        } catch (ValidationException $e){
-//            return response()->json('Bad request', 400);
-//        }
+        try {
+            $request->validate([
+                'id' => 'required|integer|min:1',
+//                'quantity' => 'required|integer|min:1',
+            ]);
+        } catch (ValidationException $e){
+            return response()->json('Bad request', 400);
+        }
         $id = $request['id'];
         if (!Product::find($id)) return response()->json('Not Found',404);
         $products = session()->get('products', []);
-//        $products[$id] = $request->quantity;
-    $products[$id] = 0;
+        if (isset($request['quantity'])) {
+            $products[$id] = $request->quantity;
+        } else {
+            $products[$id] = 0;
+        }
         session()->put('products',$products);
         return response()->json('Product successfully added', 201);
     }
